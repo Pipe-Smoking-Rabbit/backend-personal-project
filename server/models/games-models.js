@@ -8,6 +8,7 @@ exports.fetchCategories = () => {
     })
     .catch((error) => {
       console.log(error);
+
       return Promise.reject({ message: "Something went wrong!" });
     });
 };
@@ -24,3 +25,4 @@ exports.fetchReviewByID = (review_id) => {
       return review
     });
 };
+

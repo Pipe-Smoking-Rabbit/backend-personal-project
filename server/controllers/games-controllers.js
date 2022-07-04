@@ -12,6 +12,7 @@ exports.getCategories = (request, response, next) => {
     });
 };
 
+
 exports.getReviewByID = (request, response, next) => {
   const { review_id } = request.params;
   fetchReviewByID(review_id)
