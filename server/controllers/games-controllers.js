@@ -1,4 +1,4 @@
-const { fetchCategories } = require("../models/games-models");
+const { fetchCategories, fetchReviewByID } = require("../models/games-models");
 
 exports.getCategories = (request, response, next) => {
   fetchCategories()
@@ -11,3 +11,7 @@ exports.getCategories = (request, response, next) => {
       next(error);
     });
 };
+
+exports.getReviewByID = () => {
+  fetchReviewByID()
+}

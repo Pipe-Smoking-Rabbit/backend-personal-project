@@ -11,3 +11,7 @@ exports.fetchCategories = () => {
       return Promise.reject({ message: "something is wrong" });
     });
 };
+
+exports.fetchReviewByID = () => {
+  
+}

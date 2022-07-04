@@ -30,6 +30,9 @@ describe("/api/categories", () => {
       });
   });
 });
+
+
+
 describe("Error Handling", () => {
   describe("incorrect url for get request", () => {});
   test("/api/invalid_url returns 404 error with error message", () => {
