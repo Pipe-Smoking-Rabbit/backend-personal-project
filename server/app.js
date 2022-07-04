@@ -1,12 +1,12 @@
 const express = require("express");
-const { getCategories } = require("./controllers/games-controllers");
+const { getCategories, getReviewByID } = require("./controllers/games-controllers");
 
 const app = express();
 
 app.use(express.json());
 
 app.get("/api/categories", getCategories);
-app.get("/api/reviews/:review_id", )
+app.get("/api/reviews/:review_id", getReviewByID)
 app.get("/api/*", (request, response) => {
   response.status(404).send({message: "invalid url"});
 });

@@ -12,6 +12,15 @@ exports.getCategories = (request, response, next) => {
     });
 };
 
-exports.getReviewByID = () => {
-  fetchReviewByID()
-}
+exports.getReviewByID = (request, response, next) => {
+  const { review_id } = request.params;
+  fetchReviewByID(review_id)
+    .then((review) => {
+      response.status(200).send({ review });
+    })
+    .catch((error) => {
+      console.log(error);
+      response.status(404).send(error);
+      next(error);
+    });;
+};

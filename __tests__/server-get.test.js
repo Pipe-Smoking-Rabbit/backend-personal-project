@@ -31,7 +31,25 @@ describe("/api/categories", () => {
   });
 });
 
-
+describe("api/reviews/:review_id", () => {
+  test("status:200 responds with a review object which should have properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at", () => {
+    return request(app)
+      .get("/api/reviews/2")
+      .expect(200)
+      .then(({ body: { review } }) => {
+        expect(review).toBeInstanceOf(Object);
+        expect(review).toHaveProperty("review_id", 2);
+        expect(review).toHaveProperty("title");
+        expect(review).toHaveProperty("review_body");
+        expect(review).toHaveProperty("votes");
+        expect(review).toHaveProperty("owner");
+        expect(review).toHaveProperty("category");
+        expect(review).toHaveProperty("review_img_url");
+        expect(review).toHaveProperty("designer");
+        expect(review).toHaveProperty("created_at");
+      });
+  });
+});
 
 describe("Error Handling", () => {
   describe("incorrect url for get request", () => {});

@@ -7,11 +7,22 @@ exports.fetchCategories = () => {
       return rows;
     })
     .catch((error) => {
-        console.log(error)
-      return Promise.reject({ message: "something is wrong" });
+      console.log(error);
+      return Promise.reject({ message: "Something went wrong!" });
     });
 };
 
-exports.fetchReviewByID = () => {
-  
-}
+exports.fetchReviewByID = (review_id) => {
+  return connection
+    .query(
+      `SELECT * FROM reviews
+     WHERE review_id = $1`,
+      [review_id]
+    )
+    .then(({ rows: [review] }) => {
+      return review
+    }).catch(error => {
+      console.log(error)
+      return Promise.reject({message: "Something went wrong!"})
+    });
+};
