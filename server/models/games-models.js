@@ -7,11 +7,9 @@ exports.fetchCategories = () => {
       return rows;
     })
     .catch((error) => {
-        console.log(error)
+      console.log(error);
       return Promise.reject({ message: "something is wrong" });
     });
 };
 
-exports.fetchReviewByID = () => {
-  
-}
+exports.fetchReviewByID = () => {};

@@ -13,5 +13,5 @@ exports.getCategories = (request, response, next) => {
 };
 
 exports.getReviewByID = () => {
-  fetchReviewByID()
-}
+  fetchReviewByID();
+};
