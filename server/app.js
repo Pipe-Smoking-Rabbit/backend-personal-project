@@ -11,6 +11,10 @@ app.get("/api/*", (request, response) => {
   response.status(404).send({message: "invalid url"});
 });
 
+app.use((error, request, response, next) => {
+    // if (error.code)
+})
+
 app.use((error, request, response, next)=> {
     console.log(error)
     response.status(500).send({message: "The creator of this server is, as yet, physically incapable of writing adequate enough code to handle your request."})

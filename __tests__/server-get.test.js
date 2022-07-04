@@ -61,4 +61,26 @@ describe("Error Handling", () => {
         expect(message).toBe("invalid url");
       });
   });
+  describe("valid but none existing review_id passed to GET /api/reviews/:review_id", () => {
+    test("status:404, that review does not exist", () => {
+      return request(app)
+        .get("/api/reviews/420")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe(
+            "Sorry. There is no review with that ID number :("
+          );
+        });
+    });
+  });
+});
+describe.only("invalid review_id passed to GET /api/reviews/:review_id", () => {
+  test("status:400, a review_id must be a number", () => {
+    return request(app)
+      .get("/api/reviews/monkee")
+      .expect(400)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("A review ID must be a number");
+      });
+  });
 });
