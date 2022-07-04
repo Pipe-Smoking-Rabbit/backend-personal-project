@@ -16,8 +16,9 @@ describe("/api/categories", () => {
     return request(app)
       .get("/api/categories")
       .expect(200)
-      .then(({ body: {categories} }) => {
+      .then(({ body: { categories } }) => {
         expect(categories).toBeInstanceOf(Array);
+        expect(categories).toHaveLength(4);
         categories.forEach((category) => {
           expect(category).toEqual(
             expect.objectContaining({
@@ -29,11 +30,14 @@ describe("/api/categories", () => {
       });
   });
 });
-describe('Error Handling', () => {
-    describe('incorrect url for get request', () => {});
-        test('/api/invalid_url returns 404 error with error message', () => {
-            return request(app).get("/api/invalid_url").expect(404).then(({body: {message}})=> {
-                expect(message).toBe("invalid url")
-            });
-    });
+describe("Error Handling", () => {
+  describe("incorrect url for get request", () => {});
+  test("/api/invalid_url returns 404 error with error message", () => {
+    return request(app)
+      .get("/api/invalid_url")
+      .expect(404)
+      .then(({ body: { message } }) => {
+        expect(message).toBe("invalid url");
+      });
+  });
 });
