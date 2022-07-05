@@ -1,4 +1,8 @@
-const { fetchCategories, fetchReviewByID } = require("../models/games-models");
+const {
+  fetchCategories,
+  fetchReviewByID,
+  updateReviewByID,
+} = require("../models/games-models");
 
 exports.getCategories = (request, response, next) => {
   fetchCategories()
@@ -11,7 +15,6 @@ exports.getCategories = (request, response, next) => {
     });
 };
 
-
 exports.getReviewByID = (request, response, next) => {
   const { review_id } = request.params;
   fetchReviewByID(review_id)
@@ -21,4 +24,12 @@ exports.getReviewByID = (request, response, next) => {
     .catch((error) => {
       next(error);
     });
+};
+
+exports.patchReviewByID = (request, response, next) => {
+  const { review_id } = request.params;
+  const { inc_votes } = request.body;
+  updateReviewByID(review_id, inc_votes).then((review) => {
+    response.status(202).send({ review });
+  });
 };

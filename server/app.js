@@ -2,6 +2,7 @@ const express = require("express");
 const {
   getCategories,
   getReviewByID,
+  patchReviewByID,
 } = require("./controllers/games-controllers");
 
 const app = express();
@@ -13,6 +14,8 @@ app.get("/api/reviews/:review_id", getReviewByID);
 app.get("*", (request, response) => {
   response.status(404).send({ message: "invalid url" });
 });
+
+app.patch("/api/reviews/:review_id", patchReviewByID)
 
 // psql error handling
 app.use((error, request, response, next) => {
