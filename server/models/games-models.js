@@ -19,9 +19,12 @@ exports.fetchReviewByID = (review_id) => {
       [review_id]
     )
     .then(({ rows: [review] }) => {
-      return review
-    }).catch(error => {
-      return Promise.reject(error.code)
+      if (review) {
+        return review;
+      }
+      return Promise.reject({
+        status: 404,
+        message: "Sorry. There is no review with that ID number :(",
+      });
     });
 };
-

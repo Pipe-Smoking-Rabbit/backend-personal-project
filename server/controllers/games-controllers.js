@@ -16,13 +16,7 @@ exports.getReviewByID = (request, response, next) => {
   const { review_id } = request.params;
   fetchReviewByID(review_id)
     .then((review) => {
-      if (!review) {
-        response
-          .status(404)
-          .send({
-            message: "Sorry. There is no review with that ID number :(",
-          });
-      } else response.status(200).send({ review });
+      response.status(200).send({ review });
     })
     .catch((error) => {
       next(error);
