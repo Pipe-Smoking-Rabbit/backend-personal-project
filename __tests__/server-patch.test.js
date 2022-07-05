@@ -13,7 +13,7 @@ afterAll(() => {
 
 describe("PATCH HAPPY PATHS", () => {
   describe("/api/reviews/:review_id", () => {
-    test("status:202 - updates the votes property on specified review object to increment by any amount", () => {
+    test("status:200 - updates the votes property on specified review object to increment by any amount", () => {
       const patch = {
         inc_votes: 1,
       };
@@ -36,7 +36,7 @@ describe("PATCH HAPPY PATHS", () => {
           });
         });
     });
-    test("status:202 - updates the votes property on specified review object to decremenet by any amount", () => {
+    test("status:200 - updates the votes property on specified review object to decremenet by any amount", () => {
       const patch = {
         inc_votes: -6,
       };
