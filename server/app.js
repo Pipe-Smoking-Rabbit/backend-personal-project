@@ -12,11 +12,14 @@ app.get("/api/*", (request, response) => {
 });
 
 app.use((error, request, response, next) => {
-    // if (error.code)
+    if (error === "22P02") {
+      response.status(400).send({ message: "A review ID must be a number" });
+    } else {
+      next(error)
+    }
 })
 
 app.use((error, request, response, next)=> {
-    console.log(error)
     response.status(500).send({message: "The creator of this server is, as yet, physically incapable of writing adequate enough code to handle your request."})
 })
 

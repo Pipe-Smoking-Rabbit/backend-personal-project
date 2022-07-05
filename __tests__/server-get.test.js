@@ -37,16 +37,18 @@ describe("api/reviews/:review_id", () => {
       .get("/api/reviews/2")
       .expect(200)
       .then(({ body: { review } }) => {
-        expect(review).toBeInstanceOf(Object);
-        expect(review).toHaveProperty("review_id", 2);
-        expect(review).toHaveProperty("title");
-        expect(review).toHaveProperty("review_body");
-        expect(review).toHaveProperty("votes");
-        expect(review).toHaveProperty("owner");
-        expect(review).toHaveProperty("category");
-        expect(review).toHaveProperty("review_img_url");
-        expect(review).toHaveProperty("designer");
-        expect(review).toHaveProperty("created_at");
+        expect(review).toEqual({
+          review_id: 2,
+          title: "Jenga",
+          category: "dexterity",
+          designer: "Leslie Scott",
+          owner: "philippaclaire9",
+          review_body: "Fiddly fun for all the family",
+          review_img_url:
+            "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+          created_at: "2021-01-18T10:01:41.251Z",
+          votes: 5,
+        });
       });
   });
 });
@@ -73,14 +75,14 @@ describe("Error Handling", () => {
         });
     });
   });
-});
-describe.only("invalid review_id passed to GET /api/reviews/:review_id", () => {
-  test("status:400, a review_id must be a number", () => {
-    return request(app)
-      .get("/api/reviews/monkee")
-      .expect(400)
-      .then(({ body: { message } }) => {
-        expect(message).toBe("A review ID must be a number");
-      });
+  describe("invalid review_id passed to GET /api/reviews/:review_id", () => {
+    test("status:400, review_id must be a number", () => {
+      return request(app)
+        .get("/api/reviews/monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("A review ID must be a number");
+        });
+    });
   });
 });
