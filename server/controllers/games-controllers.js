@@ -31,5 +31,7 @@ exports.patchReviewByID = (request, response, next) => {
   const { inc_votes } = request.body;
   updateReviewByID(review_id, inc_votes).then((review) => {
     response.status(202).send({ review });
+  }).catch(error => {
+    next(error)
   });
 };

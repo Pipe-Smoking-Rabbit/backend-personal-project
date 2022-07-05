@@ -40,6 +40,12 @@ exports.updateReviewByID = (review_id, inc_votes) => {
       queryValues
     )
     .then(({ rows: [review] }) => {
-      return review;
+      if (review) {
+        return review;
+      } 
+      return Promise.reject({
+        status: 404,
+        message: "Unable to process patch request: Review ID does not exist.",
+      });
     });
 };

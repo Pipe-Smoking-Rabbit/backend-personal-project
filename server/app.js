@@ -20,7 +20,7 @@ app.patch("/api/reviews/:review_id", patchReviewByID)
 // psql error handling
 app.use((error, request, response, next) => {
   if (error.code === "22P02") {
-    response.status(400).send({ message: "A review ID must be a number" });
+    response.status(400).send({ message: "Bad request." });
   } else {
     next(error);
   }
