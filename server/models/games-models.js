@@ -28,3 +28,9 @@ exports.fetchReviewByID = (review_id) => {
       });
     });
 };
+
+exports.fetchUsers = () => {
+  return connection.query(`SELECT * FROM users`).then(({ rows }) => {
+    return rows;
+  });
+};
