@@ -20,7 +20,7 @@ describe("PATCH HAPPY PATHS", () => {
       return request(app)
         .patch("/api/reviews/3")
         .send(patch)
-        .expect(202)
+        .expect(200)
         .then(({ body: { review } }) => {
           expect(review).toEqual({
             review_id: 3,
@@ -102,7 +102,7 @@ describe("PATCH ERROR HANDLING", () => {
           expect(message).toBe("Invalid: ID must be a number.");
         });
     });
-    test.only("400 - patch body does not contain an inc_votes property", () => {
+    test("400 - patch body does not contain an inc_votes property", () => {
       const patch = {
         title: 1,
       };
