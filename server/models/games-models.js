@@ -45,7 +45,7 @@ exports.updateReviewByID = (review_id, inc_votes) => {
       } 
       return Promise.reject({
         status: 404,
-        message: "Unable to process patch request: Review ID does not exist.",
+        message: `Unable to process patch request: Review ID ${review_id} could not be found.`,
       });
     });
 };

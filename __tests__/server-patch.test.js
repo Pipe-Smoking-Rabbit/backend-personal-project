@@ -43,7 +43,7 @@ describe("PATCH HAPPY PATHS", () => {
       return request(app)
         .patch("/api/reviews/4")
         .send(patch)
-        .expect(202)
+        .expect(200)
         .then(({ body: { review } }) => {
           expect(review).toEqual({
             review_id: 4,
@@ -74,7 +74,7 @@ describe("PATCH ERROR HANDLING", () => {
         .expect(404)
         .then(({ body: { message } }) => {
           expect(message).toBe(
-            "Unable to process patch request: Review ID does not exist."
+            "Unable to process patch request: Review ID 21 could not be found."
           );
         });
     });
@@ -87,7 +87,31 @@ describe("PATCH ERROR HANDLING", () => {
         .send(patch)
         .expect(400)
         .then(({ body: { message } }) => {
-          expect(message).toBe("Bad request.");
+          expect(message).toBe("Invalid: ID must be a number.");
+        });
+    });
+    test("400 - Review id is not a number", () => {
+      const patch = {
+        inc_votes: 1,
+      };
+      return request(app)
+        .patch("/api/reviews/monkee")
+        .send(patch)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Invalid: ID must be a number.");
+        });
+    });
+    test.only("400 - patch body does not contain an inc_votes property", () => {
+      const patch = {
+        title: 1,
+      };
+      return request(app)
+        .patch("/api/reviews/2")
+        .send(patch)
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Invalid patch request.");
         });
     });
   });
