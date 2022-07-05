@@ -14,6 +14,7 @@ app.get("*", (request, response) => {
   response.status(404).send({ message: "invalid url" });
 });
 
+// psql error handling
 app.use((error, request, response, next) => {
   if (error.code === "22P02") {
     response.status(400).send({ message: "A review ID must be a number" });
@@ -22,6 +23,7 @@ app.use((error, request, response, next) => {
   }
 });
 
+// custom error handling
 app.use((error, request, response, next) => {
   if (error.status && error.message) {
     response.status(error.status).send({ message: error.message });
@@ -30,6 +32,7 @@ app.use((error, request, response, next) => {
   }
 });
 
+// internal server error handling (500)
 app.use((error, request, response, next) => {
   response
     .status(500)
