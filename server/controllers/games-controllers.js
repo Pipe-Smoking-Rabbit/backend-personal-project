@@ -3,6 +3,7 @@ const {
   fetchCategories,
   fetchReviewByID,
   fetchUsers,
+  updateReviewByID,
 } = require("../models/games-models");
 
 exports.getCategories = (request, response, next) => {
@@ -27,8 +28,18 @@ exports.getReviewByID = (request, response, next) => {
     });
 };
 
+
 exports.getUsers = (request, response, next) => {
   fetchUsers().then((users) => {
     response.status(200).send({ users });
+
+exports.patchReviewByID = (request, response, next) => {
+  const { review_id } = request.params;
+  const { inc_votes } = request.body;
+  updateReviewByID(review_id, inc_votes).then((review) => {
+    response.status(200).send({ review });
+  }).catch(error => {
+    next(error)
+
   });
 };

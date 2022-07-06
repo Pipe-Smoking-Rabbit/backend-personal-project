@@ -96,7 +96,7 @@ describe("Error Handling", () => {
         .get("/api/reviews/monkee")
         .expect(400)
         .then(({ body: { message } }) => {
-          expect(message).toBe("A review ID must be a number");
+          expect(message).toBe("Invalid: ID must be a number.");
         });
     });
   });
