@@ -3,6 +3,7 @@ const app = require("../server/app");
 const connection = require("../db/connection");
 const testData = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
+const reviews = require("../db/data/test-data/reviews");
 
 beforeEach(() => {
   return seed(testData);
@@ -29,6 +30,34 @@ describe("GET HAPPY PATHS", () => {
             );
           });
         });
+    });
+  });
+  describe.only('api/reviews', () => {
+    test('status:200 - responds with an array of review objects', () => {
+      return request(app).get("/api/reviews").expect(200).then(({body: {reviews}})=> {
+        expect(reviews).toHaveLength(13)
+        reviews.forEach(review => {
+          expect(review).toEqual(
+            expect.objectContaining({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: expect.any(String),
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              review_body: expect.any(String),
+              designer: expect.any(String),
+              comment_count: expect.any(String)
+            })
+          )
+        })
+      })
+    });
+    test('status:200 - reviews array are sorted by date in descending order', () => {
+      return request(app).get("/api/reviews").expect(200).then(({body: {reviews}})=>{
+        expect(reviews).toBeSortedBy("created_at", {descending: true})
+      })
     });
   });
   describe("api/reviews/:review_id", () => {
