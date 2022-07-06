@@ -5,6 +5,7 @@ const {
   fetchUsers,
   fetchReviews,
   fetchCommentsByReviewID,
+  insertCommentByReviewID,
 } = require("../models/games-models");
 
 exports.getCategories = (request, response, next) => {
@@ -53,9 +54,9 @@ exports.patchReviewByID = (request, response, next) => {
 
 exports.getCommentsByReviewID = (request, response, next) => {
   const { review_id } = request.params;
-  fetchReviewByID(review_id).catch(error=> {
-    next(error)
-  })
+  fetchReviewByID(review_id).catch((error) => {
+    next(error);
+  });
   fetchCommentsByReviewID(review_id)
     .then((comments) => {
       response.status(200).send({ comments });
@@ -69,4 +70,19 @@ exports.getUsers = (request, response, next) => {
   fetchUsers().then((users) => {
     response.status(200).send({ users });
   });
+};
+
+exports.postCommentByReviewID = (request, response, next) => {
+  const { review_id } = request.params;
+  const { body, username } = request.body;
+  fetchReviewByID(review_id).catch((error) => {
+    next(error);
+  });
+  insertCommentByReviewID(review_id, body, username)
+    .then((comment) => {
+      response.status(201).send({ comment });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };

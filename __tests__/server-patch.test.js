@@ -111,7 +111,7 @@ describe("PATCH ERROR HANDLING", () => {
         .send(patch)
         .expect(400)
         .then(({ body: { message } }) => {
-          expect(message).toBe("Invalid patch request.");
+          expect(message).toBe("Invalid request.");
         });
     });
   });
