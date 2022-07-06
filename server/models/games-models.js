@@ -11,7 +11,28 @@ exports.fetchCategories = () => {
     });
 };
 
-exports.fetchReviews = () => {
+exports.fetchReviews = (sort_by = "created_at", order = "DESC") => {
+  const validSortBy = [
+    "owner",
+    "title",
+    "review_id",
+    "category",
+    "created_at",
+    "votes",
+    "designer",
+    "comment_count",
+  ];
+
+  const validOrderKey = ["ASC", "DESC"];
+
+  if (!validSortBy.includes(sort_by)) {
+    return Promise.reject({ status: 400, message: "Invalid sort request." });
+  }
+
+  if (!validOrderKey.includes(order.toUpperCase())) {
+    return Promise.reject({ status: 400, message: "Invalid order." });
+  }
+
   return connection
     .query(
       `
@@ -21,7 +42,7 @@ exports.fetchReviews = () => {
   LEFT JOIN comments
   ON reviews.review_id = comments.review_id
   GROUP BY reviews.review_id
-  ORDER BY created_at DESC`
+  ORDER BY reviews.${sort_by} ${order}`
     )
     .then(({ rows }) => {
       return rows;
