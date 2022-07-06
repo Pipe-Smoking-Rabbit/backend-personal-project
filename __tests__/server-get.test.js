@@ -32,7 +32,7 @@ describe("/api/categories", () => {
 });
 
 describe("api/reviews/:review_id", () => {
-  test("status:200 responds with a review object which should have properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at", () => {
+  test("status:200 responds with a review object which should have properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at, comment_count", () => {
     return request(app)
       .get("/api/reviews/2")
       .expect(200)
@@ -48,6 +48,7 @@ describe("api/reviews/:review_id", () => {
             "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
           created_at: "2021-01-18T10:01:41.251Z",
           votes: 5,
+          comment_count: "3",
         });
       });
   });
