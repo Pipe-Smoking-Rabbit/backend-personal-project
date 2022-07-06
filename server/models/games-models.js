@@ -48,4 +48,10 @@ exports.updateReviewByID = (review_id, inc_votes) => {
         message: `Unable to process patch request: Review ID ${review_id} could not be found.`,
       });
     });
+}
+
+exports.fetchUsers = () => {
+  return connection.query(`SELECT * FROM users`).then(({ rows }) => {
+    return rows;
+  });
 };
