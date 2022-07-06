@@ -22,7 +22,7 @@ exports.fetchReviews = () => {
   ORDER BY created_at DESC`).then(({rows})=>{
     return rows
   })
-}
+};
 
 exports.fetchReviewByID = (review_id) => {
   return connection
@@ -45,6 +45,14 @@ exports.fetchReviewByID = (review_id) => {
     });
 };
 
+exports.fetchCommentsByReviewID = (review_id) => {
+  return connection.query(`
+  SELECT * FROM comments
+  WHERE review_id = $1`, [review_id]).then(({rows})=>{
+    return rows
+  })
+}
+
 exports.updateReviewByID = (review_id, inc_votes) => {
   const queryValues = [inc_votes, review_id];
   return connection
@@ -64,7 +72,7 @@ exports.updateReviewByID = (review_id, inc_votes) => {
         message: `Unable to process patch request: Review ID ${review_id} could not be found.`,
       });
     });
-}
+};
 
 exports.fetchUsers = () => {
   return connection.query(`SELECT * FROM users`).then(({ rows }) => {
