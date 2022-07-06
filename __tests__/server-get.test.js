@@ -3,7 +3,6 @@ const app = require("../server/app");
 const connection = require("../db/connection");
 const testData = require("../db/data/test-data/index");
 const seed = require("../db/seeds/seed");
-const reviews = require("../db/data/test-data/reviews");
 
 beforeEach(() => {
   return seed(testData);
@@ -32,7 +31,7 @@ describe("GET HAPPY PATHS", () => {
         });
     });
   });
-  describe.only('api/reviews', () => {
+  describe('api/reviews', () => {
     test('status:200 - responds with an array of review objects', () => {
       return request(app).get("/api/reviews").expect(200).then(({body: {reviews}})=> {
         expect(reviews).toHaveLength(13)
@@ -61,7 +60,7 @@ describe("GET HAPPY PATHS", () => {
     });
   });
   describe("api/reviews/:review_id", () => {
-    test("status:200 responds with a review object which should have properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at", () => {
+    test("status:200 responds with a review object which should have properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at, comment_count", () => {
       return request(app)
         .get("/api/reviews/2")
         .expect(200)
@@ -77,28 +76,31 @@ describe("GET HAPPY PATHS", () => {
               "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
             created_at: "2021-01-18T10:01:41.251Z",
             votes: 5,
+            comment_count: "3",
           });
         });
     });
-  });
-  describe("/api/users", () => {
-    test("responds with an array of user objects containing properties for username, name, avatar_url", () => {
-      return request(app)
-        .get("/api/users")
-        .expect(200)
-        .then(({ body: { users } }) => {
-          expect(users).toHaveLength(4);
-          users.forEach((user) => {
-            expect(user).toEqual({
-              username: expect.any(String),
-              name: expect.any(String),
-              avatar_url: expect.any(String),
+    describe("/api/users", () => {
+      test("responds with an array of user objects containing properties for username, name, avatar_url", () => {
+        return request(app)
+          .get("/api/users")
+          .expect(200)
+          .then(({ body: { users } }) => {
+            expect(users).toHaveLength(4);
+            users.forEach((user) => {
+              expect(user).toEqual({
+                username: expect.any(String),
+                name: expect.any(String),
+                avatar_url: expect.any(String),
+              });
             });
           });
-        });
+      });
     });
   });
 });
+
+
 
 describe("Error Handling", () => {
   test("/api/invalid_url returns 404 error with error message", () => {

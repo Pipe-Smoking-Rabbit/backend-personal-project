@@ -43,6 +43,8 @@ app.use((error, request, response, next) => {
 
 // internal server error handling (500)
 app.use((error, request, response, next) => {
+  console.log(error)
+
   response.status(500).send({
     message:
       "The creator of this server is, as yet, physically incapable of writing adequate enough code to handle your request.",
