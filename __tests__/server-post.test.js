@@ -37,11 +37,11 @@ describe("HAPPY POST PATHS :)", () => {
 
 describe("POST ERROR HANDLING", () => {
   describe("/api/reviews/:review_id/comments", () => {
-    test("status:401 - unrecognised username provided for author of comment post request", () => {
+    test("status:400 - unrecognised username provided for author of comment post request", () => {
       return request(app)
         .post("/api/reviews/3/comments")
         .send({ username: "monkee", body: "test" })
-        .expect(401)
+        .expect(400)
         .then(({ body: { message } }) => {
           expect(message).toBe("Credentials not recognised.");
         });
