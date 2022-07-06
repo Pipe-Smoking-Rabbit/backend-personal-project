@@ -12,16 +12,20 @@ exports.fetchCategories = () => {
 };
 
 exports.fetchReviews = () => {
-  return connection.query(`
+  return connection
+    .query(
+      `
   SELECT reviews.*, COUNT(comments.review_id)
   AS comment_count
   FROM reviews
   LEFT JOIN comments
   ON reviews.review_id = comments.review_id
   GROUP BY reviews.review_id
-  ORDER BY created_at DESC`).then(({rows})=>{
-    return rows
-  })
+  ORDER BY created_at DESC`
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
 };
 
 exports.fetchReviewByID = (review_id) => {
@@ -40,18 +44,29 @@ exports.fetchReviewByID = (review_id) => {
       }
       return Promise.reject({
         status: 404,
-        message: "Sorry. There is no review with that ID number :(",
+        message: `Sorry. Review ID ${review_id} does not exist.`,
       });
     });
 };
 
 exports.fetchCommentsByReviewID = (review_id) => {
-  return connection.query(`
+  return connection
+    .query(
+      `
   SELECT * FROM comments
-  WHERE review_id = $1`, [review_id]).then(({rows})=>{
-    return rows
-  })
-}
+  WHERE review_id = $1`,
+      [review_id]
+    )
+    .then(({ rows }) => {
+      if (rows.length > 0) {
+        return rows;
+      }
+      return Promise.reject({
+        status: 404,
+        message: `Sorry. Review ID ${review_id} has no comments.`,
+      });
+    });
+};
 
 exports.updateReviewByID = (review_id, inc_votes) => {
   const queryValues = [inc_votes, review_id];

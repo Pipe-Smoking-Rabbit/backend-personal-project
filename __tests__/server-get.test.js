@@ -87,7 +87,7 @@ describe("GET HAPPY PATHS", () => {
         });
     });
   });
-  describe.only("/api/reviews/:review_id/comments", () => {
+  describe("/api/reviews/:review_id/comments", () => {
     test("status:200 responds with an array of comment objects for the given review_id", () => {
       return request(app)
         .get("/api/reviews/2/comments")
@@ -143,14 +143,38 @@ describe("Error Handling", () => {
         .get("/api/reviews/420")
         .expect(404)
         .then(({ body: { message } }) => {
-          expect(message).toBe(
-            "Sorry. There is no review with that ID number :("
-          );
+          expect(message).toBe("Sorry. Review ID 420 does not exist.");
         });
     });
     test("status:400, review_id must be a number", () => {
       return request(app)
         .get("/api/reviews/monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Invalid: ID must be a number.");
+        });
+    });
+  });
+  describe("/api/reviews/:review_id/comments", () => {
+    test("status:404 - review ID is valid but does not exist in the database", () => {
+      return request(app)
+        .get("/api/reviews/420/comments")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Sorry. Review ID 420 does not exist.");
+        });
+    });
+    test('status:404 - review ID exists in the database but has no comments', () => {
+      return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(404)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Sorry. Review ID 1 has no comments.");
+        });
+    });
+    test("status:400 - review ID is not a number", () => {
+      return request(app)
+        .get("/api/reviews/monkee/comments")
         .expect(400)
         .then(({ body: { message } }) => {
           expect(message).toBe("Invalid: ID must be a number.");

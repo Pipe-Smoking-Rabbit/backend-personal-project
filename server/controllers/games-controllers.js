@@ -30,28 +30,39 @@ exports.getReviewByID = (request, response, next) => {
 };
 
 exports.getReviews = (request, response, next) => {
-  fetchReviews().then(reviews => {
-    response.status(200).send({reviews})
-  }).catch(error => {
-    next(error)
-  })
+  fetchReviews()
+    .then((reviews) => {
+      response.status(200).send({ reviews });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 exports.patchReviewByID = (request, response, next) => {
   const { review_id } = request.params;
   const { inc_votes } = request.body;
-  updateReviewByID(review_id, inc_votes).then((review) => {
-    response.status(200).send({ review });
-  }).catch(error => {
-    next(error)
-  })
+  updateReviewByID(review_id, inc_votes)
+    .then((review) => {
+      response.status(200).send({ review });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
-exports.getCommentsByReviewID = (request, response, next) =>{
-  const { review_id } = request.params
-  fetchCommentsByReviewID(review_id).then(comments => {
-    response.status(200).send({comments})
+exports.getCommentsByReviewID = (request, response, next) => {
+  const { review_id } = request.params;
+  fetchReviewByID(review_id).catch(error=> {
+    next(error)
   })
+  fetchCommentsByReviewID(review_id)
+    .then((comments) => {
+      response.status(200).send({ comments });
+    })
+    .catch((error) => {
+      next(error);
+    });
 };
 
 exports.getUsers = (request, response, next) => {
