@@ -161,6 +161,23 @@ describe("Error Handling", () => {
         expect(message).toBe("invalid url");
       });
   });
+  describe('GET /api/reviews', () => {
+    test('status:400 - returns error when sort_by query is a valid column but is not sortable', () => {
+      return request(app).get("/api/reviews?sort_by=review_body").expect(400).then(({body: {message}})=>{
+        expect(message).toBe("Unable to sort by review_body.")
+      })
+    });
+    test('status:400 - returns error when sort_by query is an invalid column', () => {
+      return request(app).get("/api/reviews?sort_by=monkee").expect(400).then(({body: {message}})=>{
+        expect(message).toBe("monkee column does not exist.")
+      })
+    });
+    test('status:400 - returns error when order query is invalid sort order', () => {
+      return request(app).get("/api/reviews?sort_by=title&order=monkee").expect(400).then(({body: {message}})=>{
+        expect(message).toBe('Invalid order "monkee". Try "asc" or "desc" instead.')
+      })
+    });
+  });
   describe("GET /api/reviews/:review_id", () => {
     test("status:404, that review does not exist", () => {
       return request(app)

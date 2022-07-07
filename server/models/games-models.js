@@ -23,14 +23,19 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC") => {
     "comment_count",
   ];
 
+  const invalidExistingColumn = ["review_body", "review_img_url"]
+
   const validOrderKey = ["ASC", "DESC"];
 
   if (!validSortBy.includes(sort_by)) {
-    return Promise.reject({ status: 400, message: "Invalid sort request." });
+    if (!invalidExistingColumn.includes(sort_by)) {
+      return Promise.reject({status: 400, message: `${sort_by} column does not exist.`})
+    }
+    return Promise.reject({ status: 400, message: `Unable to sort by ${sort_by}.` });
   }
 
   if (!validOrderKey.includes(order.toUpperCase())) {
-    return Promise.reject({ status: 400, message: "Invalid order." });
+    return Promise.reject({ status: 400, message: `Invalid order "${order}". Try "asc" or "desc" instead.` });
   }
 
   let querySortString = "reviews."
