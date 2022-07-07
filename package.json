@@ -22,6 +22,8 @@
   "homepage": "https://github.com/northcoders/be-nc-games#readme",
   "dependencies": {
     "express": "^4.18.1",
+    "fs": "^0.0.1-security",
+    "fs.promises": "^0.1.2",
     "husky": "^7.0.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
@@ -35,7 +37,8 @@
   },
   "jest": {
     "setupFilesAfterEnv": [
-      "jest-extended/all", "jest-sorted"
+      "jest-extended/all",
+      "jest-sorted"
     ]
   }
 }

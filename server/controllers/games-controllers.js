@@ -6,6 +6,7 @@ const {
   fetchReviews,
   fetchCommentsByReviewID,
   insertCommentByReviewID,
+  fetchAPI,
 } = require("../models/games-models");
 
 exports.getCategories = (request, response, next) => {
@@ -90,3 +91,10 @@ exports.postCommentByReviewID = (request, response, next) => {
       next(error);
     });
 };
+
+exports.getAPI = (request, response, next) => {
+  fetchAPI().then(fileContent => {
+    fileContent = JSON.parse(fileContent)
+    response.status(200).send({fileContent})
+  })
+}

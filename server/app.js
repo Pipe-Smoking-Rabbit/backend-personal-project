@@ -7,12 +7,14 @@ const {
   getReviews,
   getCommentsByReviewID,
   postCommentByReviewID,
+  getAPI,
 } = require("./controllers/games-controllers");
 
 const app = express();
 
 app.use(express.json());
 
+app.get("/api", getAPI)
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getReviews)
 app.get("/api/reviews/:review_id", getReviewByID);
