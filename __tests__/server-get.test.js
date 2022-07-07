@@ -56,12 +56,51 @@ describe("GET HAPPY PATHS", () => {
           });
         });
     });
-    test("status:200 - reviews array are sorted by date in descending order", () => {
+    test("status:200 - reviews array are sorted by date in descending order (by default)", () => {
       return request(app)
         .get("/api/reviews")
         .expect(200)
         .then(({ body: { reviews } }) => {
           expect(reviews).toBeSortedBy("created_at", { descending: true });
+        });
+    });
+    test("status:200 - reviews array can be sorted by any valid column (descending by default)", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=votes")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("votes", { descending: true });
+        });
+    });
+    test("status:200 - reviews array can be ordered in ascending order (sorted by date by default)", () => {
+      return request(app)
+        .get("/api/reviews?order=asc")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("created_at", { descending: false });
+        });
+    });
+    test("status:200 - reviews array can be ordered in ascending order and sorted by any valid column simultaneously", () => {
+      return request(app)
+        .get("/api/reviews?order=asc&sort_by=comment_count")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("comment_count", { descending: false });
+        });
+    });
+    test("status:200 - reviews array can be filtered by category (no filter by default), if category exists but has no reviews return object will be empty array", () => {
+      return request(app)
+        .get("/api/reviews?category=social%20deduction")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(11);
+          reviews.forEach((review) => {
+            expect(review).toEqual(
+              expect.objectContaining({
+                category: "social deduction",
+              })
+            );
+          });
         });
     });
   });
@@ -137,6 +176,44 @@ describe("Error Handling", () => {
         expect(message).toBe("invalid url");
       });
   });
+  describe("GET /api/reviews", () => {
+    test("status:400 - returns error when sort_by query is a valid column but is not sortable", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=review_body")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Unable to sort by review_body.");
+        });
+    });
+    test("status:400 - returns error when sort_by query is an invalid column", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("monkee column does not exist.");
+        });
+    });
+    test("status:400 - returns error when order query is invalid sort order", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=title&order=monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe(
+            'Invalid order "monkee". Try "asc" or "desc" instead.'
+          );
+        });
+    });
+    test('status:400 - category does not exist', () => {
+      return request(app)
+        .get("/api/reviews?sort_by=title&order=desc&category=monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe(
+            'monkee category does not exist.'
+          );
+        });
+    });
+  });
   describe("GET /api/reviews/:review_id", () => {
     test("status:404, that review does not exist", () => {
       return request(app)
@@ -164,7 +241,7 @@ describe("Error Handling", () => {
           expect(message).toBe("Sorry. Review ID 420 does not exist.");
         });
     });
-    test('status:404 - review ID exists in the database but has no comments', () => {
+    test("status:404 - review ID exists in the database but has no comments", () => {
       return request(app)
         .get("/api/reviews/1/comments")
         .expect(404)

@@ -1,28 +1,82 @@
 const connection = require("../../db/connection");
 
-exports.fetchCategories = () => {
-  return connection
-    .query(`SELECT * FROM categories;`)
-    .then(({ rows }) => {
-      return rows;
-    })
-    .catch((error) => {
-      return Promise.reject({ message: "Something went wrong!" });
-    });
+exports.fetchCategories = (category) => {
+  let queryString = `SELECT * FROM categories`;
+  let bindArray = undefined
+
+  if (category) {
+    queryString += ` WHERE slug = $1`;
+    bindArray = [category]
+  }
+
+  return connection.query(queryString, bindArray).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({status:400, message: `${category} category does not exist.`})
+    }
+    return rows;
+  });
 };
 
-exports.fetchReviews = () => {
+exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
+  let queryString = `
+      SELECT reviews.*, COUNT(comments.review_id)
+      AS comment_count
+      FROM reviews
+      LEFT JOIN comments
+      ON reviews.review_id = comments.review_id`;
+
+  const validSortBy = [
+    "owner",
+    "title",
+    "review_id",
+    "category",
+    "created_at",
+    "votes",
+    "designer",
+    "comment_count",
+  ];
+
+  const invalidExistingColumn = ["review_body", "review_img_url"];
+
+  const validOrderKey = ["ASC", "DESC"];
+
+  if (!validSortBy.includes(sort_by)) {
+    if (!invalidExistingColumn.includes(sort_by)) {
+      return Promise.reject({
+        status: 400,
+        message: `${sort_by} column does not exist.`,
+      });
+    }
+    return Promise.reject({
+      status: 400,
+      message: `Unable to sort by ${sort_by}.`,
+    });
+  }
+
+  if (!validOrderKey.includes(order.toUpperCase())) {
+    return Promise.reject({
+      status: 400,
+      message: `Invalid order "${order}". Try "asc" or "desc" instead.`,
+    });
+  }
+
+  let bindArray = undefined
+  let querySortString = "reviews.";
+  if (sort_by === "comment_count") {
+    querySortString = `COUNT(comments.review_id)`;
+  } else {
+    querySortString += sort_by;
+  }
+
+  if (category) {
+    queryString += ` WHERE category = $1`;
+    bindArray = [category]
+  }
+  queryString += ` GROUP BY reviews.review_id
+      ORDER BY ${querySortString} ${order}`;
+
   return connection
-    .query(
-      `
-  SELECT reviews.*, COUNT(comments.review_id)
-  AS comment_count
-  FROM reviews
-  LEFT JOIN comments
-  ON reviews.review_id = comments.review_id
-  GROUP BY reviews.review_id
-  ORDER BY created_at DESC`
-    )
+    .query(queryString, bindArray)
     .then(({ rows }) => {
       return rows;
     });

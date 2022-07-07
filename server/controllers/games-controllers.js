@@ -30,8 +30,12 @@ exports.getReviewByID = (request, response, next) => {
     });
 };
 
-exports.getReviews = (request, response, next) => {
-  fetchReviews()
+exports.getReviews = async (request, response, next) => {
+  const { sort_by, order, category } = request.query;
+  await fetchCategories(category).catch((error) => {
+    next(error);
+  });
+  fetchReviews(sort_by, order, category)
     .then((reviews) => {
       response.status(200).send({ reviews });
     })
@@ -52,9 +56,9 @@ exports.patchReviewByID = (request, response, next) => {
     });
 };
 
-exports.getCommentsByReviewID = (request, response, next) => {
+exports.getCommentsByReviewID = async (request, response, next) => {
   const { review_id } = request.params;
-  fetchReviewByID(review_id).catch((error) => {
+  await fetchReviewByID(review_id).catch((error) => {
     next(error);
   });
   fetchCommentsByReviewID(review_id)
