@@ -127,7 +127,7 @@ describe("GET HAPPY PATHS", () => {
     });
   });
   describe("/api/reviews/:review_id/comments", () => {
-    test("status:200 responds with an array of comment objects for the given review_id", () => {
+    test("status:200 responds with an array of comment objects for the given review_id, array returned is empty when review has no comments", () => {
       return request(app)
         .get("/api/reviews/2/comments")
         .expect(200)
@@ -239,14 +239,6 @@ describe("Error Handling", () => {
         .expect(404)
         .then(({ body: { message } }) => {
           expect(message).toBe("Sorry. Review ID 420 does not exist.");
-        });
-    });
-    test("status:404 - review ID exists in the database but has no comments", () => {
-      return request(app)
-        .get("/api/reviews/1/comments")
-        .expect(404)
-        .then(({ body: { message } }) => {
-          expect(message).toBe("Sorry. Review ID 1 has no comments.");
         });
     });
     test("status:400 - review ID is not a number", () => {

@@ -2,16 +2,19 @@ const connection = require("../../db/connection");
 
 exports.fetchCategories = (category) => {
   let queryString = `SELECT * FROM categories`;
-  let bindArray = undefined
+  let bindArray = undefined;
 
   if (category) {
     queryString += ` WHERE slug = $1`;
-    bindArray = [category]
+    bindArray = [category];
   }
 
   return connection.query(queryString, bindArray).then(({ rows }) => {
     if (rows.length === 0) {
-      return Promise.reject({status:400, message: `${category} category does not exist.`})
+      return Promise.reject({
+        status: 400,
+        message: `${category} category does not exist.`,
+      });
     }
     return rows;
   });
@@ -60,7 +63,7 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
     });
   }
 
-  let bindArray = undefined
+  let bindArray = undefined;
   let querySortString = "reviews.";
   if (sort_by === "comment_count") {
     querySortString = `COUNT(comments.review_id)`;
@@ -70,16 +73,14 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
 
   if (category) {
     queryString += ` WHERE category = $1`;
-    bindArray = [category]
+    bindArray = [category];
   }
   queryString += ` GROUP BY reviews.review_id
       ORDER BY ${querySortString} ${order}`;
 
-  return connection
-    .query(queryString, bindArray)
-    .then(({ rows }) => {
-      return rows;
-    });
+  return connection.query(queryString, bindArray).then(({ rows }) => {
+    return rows;
+  });
 };
 
 exports.fetchReviewByID = (review_id) => {
@@ -112,13 +113,7 @@ exports.fetchCommentsByReviewID = (review_id) => {
       [review_id]
     )
     .then(({ rows }) => {
-      if (rows.length > 0) {
-        return rows;
-      }
-      return Promise.reject({
-        status: 404,
-        message: `Sorry. Review ID ${review_id} has no comments.`,
-      });
+      return rows;
     });
 };
 
