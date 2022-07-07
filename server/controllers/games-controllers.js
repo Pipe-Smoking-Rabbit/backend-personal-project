@@ -30,8 +30,11 @@ exports.getReviewByID = (request, response, next) => {
     });
 };
 
-exports.getReviews = (request, response, next) => {
+exports.getReviews = async (request, response, next) => {
   const { sort_by, order, category } = request.query;
+  await fetchCategories(category).catch((error) => {
+    next(error);
+  });
   fetchReviews(sort_by, order, category)
     .then((reviews) => {
       response.status(200).send({ reviews });
