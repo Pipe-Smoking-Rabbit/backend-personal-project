@@ -7,6 +7,7 @@ const {
   getReviews,
   getCommentsByReviewID,
   postCommentByReviewID,
+  deleteComment,
 } = require("./controllers/games-controllers");
 
 const app = express();
@@ -22,6 +23,8 @@ app.get("/api/users", getUsers)
 app.patch("/api/reviews/:review_id", patchReviewByID);
 
 app.post("/api/reviews/:review_id/comments", postCommentByReviewID)
+
+app.delete("/api/comments/:comment_id", deleteComment)
 
 // invalid url error handling
 app.get("*", (request, response) => {
