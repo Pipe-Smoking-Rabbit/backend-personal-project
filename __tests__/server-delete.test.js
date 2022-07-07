@@ -17,9 +17,6 @@ describe("DELETE HAPPY PATHS :)", () => {
       return request(app)
         .delete("/api/comments/2")
         .expect(204)
-        .then(({ body }) => {
-          expect(body).toEqual({});
-        });
     });
   });
 });

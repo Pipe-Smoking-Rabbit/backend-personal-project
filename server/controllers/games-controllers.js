@@ -96,7 +96,7 @@ exports.deleteComment = (request, response, next) => {
   const { comment_id } = request.params;
   removeComment(comment_id)
     .then(() => {
-      response.status(204).send({});
+      response.sendStatus(204);
     })
     .catch((error) => {
       next(error);
