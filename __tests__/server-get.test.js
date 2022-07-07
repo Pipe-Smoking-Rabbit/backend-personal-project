@@ -72,12 +72,20 @@ describe("GET HAPPY PATHS", () => {
           expect(reviews).toBeSortedBy("votes", { descending: true });
         });
     });
-    test("status:200 - reviews array can be sorted in ascending order (sorted by date by default)", () => {
+    test("status:200 - reviews array can be ordered in ascending order (sorted by date by default)", () => {
       return request(app)
         .get("/api/reviews?order=asc")
         .expect(200)
         .then(({ body: { reviews } }) => {
           expect(reviews).toBeSortedBy("created_at", { descending: false });
+        });
+    });
+    test("status:200 - reviews array can be ordered in ascending order and sorted by any valid column simultaneously", () => {
+      return request(app)
+        .get("/api/reviews?order=asc&sort_by=comment_count")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toBeSortedBy("comment_count", { descending: false });
         });
     });
   });

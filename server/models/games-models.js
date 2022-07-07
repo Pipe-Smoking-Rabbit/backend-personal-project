@@ -33,6 +33,13 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC") => {
     return Promise.reject({ status: 400, message: "Invalid order." });
   }
 
+  let querySortString = "reviews."
+  if (sort_by === "comment_count") {
+    querySortString = `COUNT(comments.review_id)`;
+  } else {
+    querySortString += sort_by
+  }
+
   return connection
     .query(
       `
@@ -42,7 +49,7 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC") => {
   LEFT JOIN comments
   ON reviews.review_id = comments.review_id
   GROUP BY reviews.review_id
-  ORDER BY reviews.${sort_by} ${order}`
+  ORDER BY ${querySortString} ${order}`
     )
     .then(({ rows }) => {
       return rows;
