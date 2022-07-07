@@ -23,7 +23,12 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
     "comment_count",
   ];
 
-  const validCategories = ["social deduction", "dexterity", "euro game", undefined]
+  const validCategories = [
+    "social deduction",
+    "dexterity",
+    "euro game",
+    undefined,
+  ];
 
   const invalidExistingColumn = ["review_body", "review_img_url"];
 
@@ -43,7 +48,10 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
   }
 
   if (!validCategories.includes(category)) {
-    return Promise.reject({status: 400, message: `${category} category does not exist.`})
+    return Promise.reject({
+      status: 400,
+      message: `${category} category does not exist.`,
+    });
   }
 
   if (!validOrderKey.includes(order.toUpperCase())) {
@@ -61,7 +69,7 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
     querySortString += sort_by;
   }
   if (category) {
-    queryCategoryFilter = `WHERE category = '${category}'`
+    queryCategoryFilter = `WHERE category = '${category}'`;
   }
 
   return connection

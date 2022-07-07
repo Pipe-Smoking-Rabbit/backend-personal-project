@@ -31,7 +31,7 @@ exports.getReviewByID = (request, response, next) => {
 };
 
 exports.getReviews = (request, response, next) => {
-  const { sort_by, order, category } = request.query
+  const { sort_by, order, category } = request.query;
   fetchReviews(sort_by, order, category)
     .then((reviews) => {
       response.status(200).send({ reviews });
