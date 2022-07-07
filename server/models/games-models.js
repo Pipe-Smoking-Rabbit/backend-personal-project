@@ -10,6 +10,9 @@ exports.fetchCategories = (category) => {
   }
 
   return connection.query(queryString, bindArray).then(({ rows }) => {
+    if (rows.length === 0) {
+      return Promise.reject({status:400, message: `${category} category does not exist.`})
+    }
     return rows;
   });
 };

@@ -88,7 +88,7 @@ describe("GET HAPPY PATHS", () => {
           expect(reviews).toBeSortedBy("comment_count", { descending: false });
         });
     });
-    test("status:200 - reviews array can be filtered by category (no filter by default)", () => {
+    test("status:200 - reviews array can be filtered by category (no filter by default), if category exists but has no reviews return object will be empty array", () => {
       return request(app)
         .get("/api/reviews?category=social%20deduction")
         .expect(200)
