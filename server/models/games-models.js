@@ -113,3 +113,7 @@ exports.insertCommentByReviewID = (review_id, body, username) => {
       return comment;
     });
 };
+
+exports.removeComment = (comment_id) => {
+  
+}

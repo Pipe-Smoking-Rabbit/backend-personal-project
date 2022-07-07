@@ -86,3 +86,7 @@ exports.postCommentByReviewID = (request, response, next) => {
       next(error);
     });
 };
+
+exports.deleteComment = (request, response, next) => {
+  
+}
