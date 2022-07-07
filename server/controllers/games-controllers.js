@@ -31,8 +31,8 @@ exports.getReviewByID = (request, response, next) => {
 };
 
 exports.getReviews = (request, response, next) => {
-  const { sort_by, order } = request.query
-  fetchReviews(sort_by, order)
+  const { sort_by, order, category } = request.query
+  fetchReviews(sort_by, order, category)
     .then((reviews) => {
       response.status(200).send({ reviews });
     })
@@ -53,9 +53,9 @@ exports.patchReviewByID = (request, response, next) => {
     });
 };
 
-exports.getCommentsByReviewID = (request, response, next) => {
+exports.getCommentsByReviewID = async (request, response, next) => {
   const { review_id } = request.params;
-  fetchReviewByID(review_id).catch((error) => {
+  await fetchReviewByID(review_id).catch((error) => {
     next(error);
   });
   fetchCommentsByReviewID(review_id)

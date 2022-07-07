@@ -88,6 +88,21 @@ describe("GET HAPPY PATHS", () => {
           expect(reviews).toBeSortedBy("comment_count", { descending: false });
         });
     });
+    test("status:200 - reviews array can be filtered by category (no filter by default)", () => {
+      return request(app)
+        .get("/api/reviews?category=social%20deduction")
+        .expect(200)
+        .then(({ body: { reviews } }) => {
+          expect(reviews).toHaveLength(11);
+          reviews.forEach((review) => {
+            expect(review).toEqual(
+              expect.objectContaining({
+                category: "social deduction",
+              })
+            );
+          });
+        });
+    });
   });
   describe("api/reviews/:review_id", () => {
     test("status:200 responds with a review object which should have properties: review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at, comment_count", () => {
@@ -161,21 +176,42 @@ describe("Error Handling", () => {
         expect(message).toBe("invalid url");
       });
   });
-  describe('GET /api/reviews', () => {
-    test('status:400 - returns error when sort_by query is a valid column but is not sortable', () => {
-      return request(app).get("/api/reviews?sort_by=review_body").expect(400).then(({body: {message}})=>{
-        expect(message).toBe("Unable to sort by review_body.")
-      })
+  describe("GET /api/reviews", () => {
+    test("status:400 - returns error when sort_by query is a valid column but is not sortable", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=review_body")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("Unable to sort by review_body.");
+        });
     });
-    test('status:400 - returns error when sort_by query is an invalid column', () => {
-      return request(app).get("/api/reviews?sort_by=monkee").expect(400).then(({body: {message}})=>{
-        expect(message).toBe("monkee column does not exist.")
-      })
+    test("status:400 - returns error when sort_by query is an invalid column", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe("monkee column does not exist.");
+        });
     });
-    test('status:400 - returns error when order query is invalid sort order', () => {
-      return request(app).get("/api/reviews?sort_by=title&order=monkee").expect(400).then(({body: {message}})=>{
-        expect(message).toBe('Invalid order "monkee". Try "asc" or "desc" instead.')
-      })
+    test("status:400 - returns error when order query is invalid sort order", () => {
+      return request(app)
+        .get("/api/reviews?sort_by=title&order=monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe(
+            'Invalid order "monkee". Try "asc" or "desc" instead.'
+          );
+        });
+    });
+    test('status:400 - category does not exist', () => {
+      return request(app)
+        .get("/api/reviews?sort_by=title&order=desc&category=monkee")
+        .expect(400)
+        .then(({ body: { message } }) => {
+          expect(message).toBe(
+            'monkee category does not exist.'
+          );
+        });
     });
   });
   describe("GET /api/reviews/:review_id", () => {
@@ -205,7 +241,7 @@ describe("Error Handling", () => {
           expect(message).toBe("Sorry. Review ID 420 does not exist.");
         });
     });
-    test('status:404 - review ID exists in the database but has no comments', () => {
+    test("status:404 - review ID exists in the database but has no comments", () => {
       return request(app)
         .get("/api/reviews/1/comments")
         .expect(404)

@@ -11,7 +11,7 @@ exports.fetchCategories = () => {
     });
 };
 
-exports.fetchReviews = (sort_by = "created_at", order = "DESC") => {
+exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
   const validSortBy = [
     "owner",
     "title",
@@ -23,38 +23,58 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC") => {
     "comment_count",
   ];
 
-  const invalidExistingColumn = ["review_body", "review_img_url"]
+  const validCategories = ["social deduction", "dexterity", "euro game", undefined]
+
+  const invalidExistingColumn = ["review_body", "review_img_url"];
 
   const validOrderKey = ["ASC", "DESC"];
 
   if (!validSortBy.includes(sort_by)) {
     if (!invalidExistingColumn.includes(sort_by)) {
-      return Promise.reject({status: 400, message: `${sort_by} column does not exist.`})
+      return Promise.reject({
+        status: 400,
+        message: `${sort_by} column does not exist.`,
+      });
     }
-    return Promise.reject({ status: 400, message: `Unable to sort by ${sort_by}.` });
+    return Promise.reject({
+      status: 400,
+      message: `Unable to sort by ${sort_by}.`,
+    });
+  }
+
+  if (!validCategories.includes(category)) {
+    return Promise.reject({status: 400, message: `${category} category does not exist.`})
   }
 
   if (!validOrderKey.includes(order.toUpperCase())) {
-    return Promise.reject({ status: 400, message: `Invalid order "${order}". Try "asc" or "desc" instead.` });
+    return Promise.reject({
+      status: 400,
+      message: `Invalid order "${order}". Try "asc" or "desc" instead.`,
+    });
   }
 
-  let querySortString = "reviews."
+  let queryCategoryFilter = "";
+  let querySortString = "reviews.";
   if (sort_by === "comment_count") {
     querySortString = `COUNT(comments.review_id)`;
   } else {
-    querySortString += sort_by
+    querySortString += sort_by;
+  }
+  if (category) {
+    queryCategoryFilter = `WHERE category = '${category}'`
   }
 
   return connection
     .query(
       `
-  SELECT reviews.*, COUNT(comments.review_id)
-  AS comment_count
-  FROM reviews
-  LEFT JOIN comments
-  ON reviews.review_id = comments.review_id
-  GROUP BY reviews.review_id
-  ORDER BY ${querySortString} ${order}`
+      SELECT reviews.*, COUNT(comments.review_id)
+      AS comment_count
+      FROM reviews
+      LEFT JOIN comments
+      ON reviews.review_id = comments.review_id
+      ${queryCategoryFilter}
+      GROUP BY reviews.review_id
+      ORDER BY ${querySortString} ${order}`
     )
     .then(({ rows }) => {
       return rows;
