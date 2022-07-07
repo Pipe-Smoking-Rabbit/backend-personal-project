@@ -24,7 +24,7 @@ app.patch("/api/reviews/:review_id", patchReviewByID);
 app.post("/api/reviews/:review_id/comments", postCommentByReviewID)
 
 // invalid url error handling
-app.get("*", (request, response) => {
+app.use("*", (request, response) => {
   response.status(404).send({ message: "invalid url" });
 });
 
@@ -35,7 +35,7 @@ app.use((error, request, response, next) => {
   } else if (error.code === "23502") {
     response.status(400).send({ message: "Invalid request." });
   } else if (error.code === "23503") {
-    response.status(401).send({message: "Credentials not recognised."})
+    response.status(400).send({message: "Credentials not recognised."})
   } else {
     next(error);
   }
