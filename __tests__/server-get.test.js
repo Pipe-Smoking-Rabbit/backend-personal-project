@@ -12,6 +12,27 @@ afterAll(() => {
 });
 
 describe("GET HAPPY PATHS", () => {
+  describe("/api", () => {
+    test("status:200 - responds with json object containing details for every available endpoint", () => {
+      return request(app)
+        .get("/api")
+        .expect(200)
+        .then(({ body: { fileContent } }) => {
+          expect(fileContent).toEqual(
+            expect.objectContaining({
+              "DELETE /api/comments/:comment_id": expect.any(Object),
+              "GET /api/reviews": expect.any(Object),
+              "GET /api/reviews/:review_id": expect.any(Object),
+              "GET /api/reviews/:review_id/comments": expect.any(Object),
+              "GET /api/users": expect.any(Object),
+              "PATCH /api/reviews/:review_id": expect.any(Object),
+              "POST /api/reviews/:review_id/comments": expect.any(Object),
+              "DELETE /api/comments/:comment_id": expect.any(Object),
+            })
+          );
+        });
+    });
+  });
   describe("/api/categories", () => {
     test("status:200, responds with an array of category objects, each of which contains slug and description properties", () => {
       return request(app)
@@ -203,14 +224,12 @@ describe("Error Handling", () => {
           );
         });
     });
-    test('status:400 - category does not exist', () => {
+    test("status:400 - category does not exist", () => {
       return request(app)
         .get("/api/reviews?sort_by=title&order=desc&category=monkee")
         .expect(400)
         .then(({ body: { message } }) => {
-          expect(message).toBe(
-            'monkee category does not exist.'
-          );
+          expect(message).toBe("monkee category does not exist.");
         });
     });
   });

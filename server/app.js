@@ -7,6 +7,7 @@ const {
   getReviews,
   getCommentsByReviewID,
   postCommentByReviewID,
+  getAPI,
   deleteComment,
 } = require("./controllers/games-controllers");
 
@@ -14,6 +15,7 @@ const app = express();
 
 app.use(express.json());
 
+app.get("/api", getAPI)
 app.get("/api/categories", getCategories);
 app.get("/api/reviews", getReviews)
 app.get("/api/reviews/:review_id", getReviewByID);
@@ -27,7 +29,7 @@ app.post("/api/reviews/:review_id/comments", postCommentByReviewID)
 app.delete("/api/comments/:comment_id", deleteComment)
 
 // invalid url error handling
-app.get("*", (request, response) => {
+app.use("*", (request, response) => {
   response.status(404).send({ message: "invalid url" });
 });
 
@@ -38,7 +40,7 @@ app.use((error, request, response, next) => {
   } else if (error.code === "23502") {
     response.status(400).send({ message: "Invalid request." });
   } else if (error.code === "23503") {
-    response.status(401).send({message: "Credentials not recognised."})
+    response.status(400).send({message: "Credentials not recognised."})
   } else {
     next(error);
   }

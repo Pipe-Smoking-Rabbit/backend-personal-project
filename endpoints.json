@@ -30,5 +30,78 @@
         }
       ]
     }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves a single review specified by review ID",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "review_id": 1,
+        "title": "Agricola",
+        "designer": "Uwe Rosenberg",
+        "owner": "mallionaire",
+        "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+        "review_body": "Farmyard fun!",
+        "category": "euro game",
+        "created_at": "new Date(1610964020514)",
+        "votes": 1
+      }
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves comments attached to a review",
+    "queries": [],
+    "exampleResponse": {
+      "comment": {
+        "comment_id": 1,
+        "body": "I loved this game too!",
+        "author": "bainesface",
+        "review_id": 2,
+        "created_at": 1511354613389,
+        "votes": 16
+      }
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of user objects",
+    "queries": [],
+    "exampleResponse": {
+      "user_id": 1,
+      "username": "mallionaire",
+      "name": "haz",
+      "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "updates votes to increment or decrement by specified amount",
+    "queries": [],
+    "exampleResponse": {
+      "review": 3,
+      "title": "Ultimate Werewolf",
+      "designer": "Akihisa Okui",
+      "owner": "bainesface",
+      "review_img_url": "https://www.golenbock.com/wp-content/uploads/2015/01/placeholder-user.png",
+      "review_body": "We couldn't find the werewolf!",
+      "category": "social deduction",
+      "created_at": "new Date(1610964020514)",
+      "votes": 6
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "posts a comment on a game review",
+    "queries": [],
+    "exampleResponse": {
+      "author": "mallionaire",
+      "body": "What is grief, if not love persevering",
+      "comment_id": 7,
+      "created_at": "new Date(1610964020514)",
+      "review_id": 2,
+      "votes": 0
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "removes a previously posted comment on a review",
+    "queries": [],
+    "exampleResponse": {}
   }
 }

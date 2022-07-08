@@ -6,6 +6,7 @@ const {
   fetchReviews,
   fetchCommentsByReviewID,
   insertCommentByReviewID,
+  fetchAPI,
   removeComment,
 } = require("../models/games-models");
 
@@ -92,6 +93,13 @@ exports.postCommentByReviewID = (request, response, next) => {
     });
 };
 
+exports.getAPI = (request, response, next) => {
+  fetchAPI().then(fileContent => {
+    fileContent = JSON.parse(fileContent)
+    response.status(200).send({fileContent})
+  })
+}
+
 exports.deleteComment = (request, response, next) => {
   const { comment_id } = request.params;
   removeComment(comment_id)
@@ -102,3 +110,4 @@ exports.deleteComment = (request, response, next) => {
       next(error);
     });
 };
+
