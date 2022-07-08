@@ -7,6 +7,7 @@ const {
   fetchCommentsByReviewID,
   insertCommentByReviewID,
   fetchAPI,
+  removeComment,
 } = require("../models/games-models");
 
 exports.getCategories = (request, response, next) => {
@@ -98,3 +99,15 @@ exports.getAPI = (request, response, next) => {
     response.status(200).send({fileContent})
   })
 }
+
+exports.deleteComment = (request, response, next) => {
+  const { comment_id } = request.params;
+  removeComment(comment_id)
+    .then(() => {
+      response.sendStatus(204);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
