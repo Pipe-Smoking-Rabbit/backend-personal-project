@@ -13,11 +13,12 @@ afterAll(() => {
 
 describe("GET HAPPY PATHS", () => {
   describe("/api", () => {
-    test("status:200 - responds with json object containing details for every available endpoint", () => {
+    test.only("status:200 - responds with json object containing details for every available endpoint", () => {
       return request(app)
         .get("/api")
         .expect(200)
-        .then(({ body: { fileContent } }) => {
+        .then(({ body:  {fileContent}  }) => {
+          fileContent = JSON.parse(fileContent)
           expect(fileContent).toEqual(
             expect.objectContaining({
               "DELETE /api/comments/:comment_id": expect.any(Object),
