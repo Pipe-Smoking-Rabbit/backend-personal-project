@@ -18,7 +18,6 @@ describe("GET HAPPY PATHS", () => {
         .get("/api")
         .expect(200)
         .then(({ body: { fileContent } }) => {
-          console.log(fileContent);
           expect(fileContent).toEqual(
             expect.objectContaining({
               "DELETE /api/comments/:comment_id": expect.any(Object),
