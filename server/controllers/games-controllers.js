@@ -95,7 +95,6 @@ exports.postCommentByReviewID = (request, response, next) => {
 
 exports.getAPI = (request, response, next) => {
   fetchAPI().then(fileContent => {
-    fileContent = JSON.parse(fileContent)
     response.status(200).send({fileContent})
   })
 }
