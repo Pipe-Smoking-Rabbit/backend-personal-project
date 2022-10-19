@@ -11,6 +11,12 @@ const {
   getAPI,
   deleteComment,
 } = require("./controllers/games-controllers");
+const {
+  handleInternalServerError,
+  handleCustomError,
+  handlePsqlError,
+  handleInvalidPathError,
+} = require("./errors");
 
 const app = express();
 
@@ -34,41 +40,15 @@ app.post("/api/reviews/:review_id/comments", postCommentByReviewID);
 app.delete("/api/comments/:comment_id", deleteComment);
 
 // invalid url error handling
-app.use("*", (request, response) => {
-  response.status(404).send({ message: "invalid url" });
-});
+app.use("*", handleInvalidPathError);
 
 // psql error handling
-app.use((error, request, response, next) => {
-  if (error.code === "22P02") {
-    response.status(400).send({ message: "Invalid: ID must be a number." });
-  } else if (error.code === "23502") {
-    response.status(400).send({ message: "Invalid request." });
-  } else if (error.code === "23503") {
-    response.status(400).send({ message: "Credentials not recognised." });
-  } else {
-    next(error);
-  }
-});
+app.use(handlePsqlError);
 
 // custom error handling
-app.use((error, request, response, next) => {
-  const { status, message } = error;
-  if (status && message) {
-    response.status(status).send({ message });
-  } else {
-    next(error);
-  }
-});
+app.use(handleCustomError);
 
 // internal server error handling (500)
-app.use((error, request, response, next) => {
-  console.log(error);
-
-  response.status(500).send({
-    message:
-      "The creator of this server is, as yet, physically incapable of writing adequate enough code to handle your request.",
-  });
-});
+app.use(handleInternalServerError);
 
 module.exports = app;
