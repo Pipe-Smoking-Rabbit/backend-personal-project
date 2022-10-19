@@ -21,7 +21,7 @@ exports.fetchCategories = (category) => {
   });
 };
 
-exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
+exports.fetchReviews = (sortBy = "created_at", order = "DESC", category) => {
   let queryString = `
       SELECT reviews.*, COUNT(comments.review_id)
       AS comment_count
@@ -44,16 +44,16 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
 
   const validOrderKey = ["ASC", "DESC"];
 
-  if (!validSortBy.includes(sort_by)) {
-    if (!invalidExistingColumn.includes(sort_by)) {
+  if (!validSortBy.includes(sortBy)) {
+    if (!invalidExistingColumn.includes(sortBy)) {
       return Promise.reject({
         status: 400,
-        message: `${sort_by} column does not exist.`,
+        message: `${sortBy} column does not exist.`,
       });
     }
     return Promise.reject({
       status: 400,
-      message: `Unable to sort by ${sort_by}.`,
+      message: `Unable to sort by ${sortBy}.`,
     });
   }
 
@@ -64,17 +64,17 @@ exports.fetchReviews = (sort_by = "created_at", order = "DESC", category) => {
     });
   }
 
-  let bindArray = undefined;
+  const bindArray = [];
   let querySortString = "reviews.";
-  if (sort_by === "comment_count") {
+  if (sortBy === "comment_count") {
     querySortString = `COUNT(comments.review_id)`;
   } else {
-    querySortString += sort_by;
+    querySortString += sortBy;
   }
 
   if (category) {
     queryString += ` WHERE category = $1`;
-    bindArray = [category];
+    bindArray.push(category);
   }
   queryString += ` GROUP BY reviews.review_id
       ORDER BY ${querySortString} ${order}`;

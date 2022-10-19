@@ -1,4 +1,4 @@
-const cors = require("cors")
+const cors = require("cors");
 const express = require("express");
 const {
   getCategories,
@@ -17,18 +17,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get("/api", getAPI)
-app.get("/api/categories", getCategories);
-app.get("/api/reviews", getReviews)
-app.get("/api/reviews/:review_id", getReviewByID);
-app.get("/api/reviews/:review_id/comments", getCommentsByReviewID)
-app.get("/api/users", getUsers)
+app.get("/api", getAPI);
 
+app.get("/api/users", getUsers);
+
+app.get("/api/reviews", getReviews);
+
+app.get("/api/categories", getCategories);
+
+app.get("/api/reviews/:review_id", getReviewByID);
 app.patch("/api/reviews/:review_id", patchReviewByID);
 
-app.post("/api/reviews/:review_id/comments", postCommentByReviewID)
+app.get("/api/reviews/:review_id/comments", getCommentsByReviewID);
+app.post("/api/reviews/:review_id/comments", postCommentByReviewID);
 
-app.delete("/api/comments/:comment_id", deleteComment)
+app.delete("/api/comments/:comment_id", deleteComment);
 
 // invalid url error handling
 app.use("*", (request, response) => {
@@ -42,7 +45,7 @@ app.use((error, request, response, next) => {
   } else if (error.code === "23502") {
     response.status(400).send({ message: "Invalid request." });
   } else if (error.code === "23503") {
-    response.status(400).send({message: "Credentials not recognised."})
+    response.status(400).send({ message: "Credentials not recognised." });
   } else {
     next(error);
   }
@@ -50,8 +53,9 @@ app.use((error, request, response, next) => {
 
 // custom error handling
 app.use((error, request, response, next) => {
-  if (error.status && error.message) {
-    response.status(error.status).send({ message: error.message });
+  const { status, message } = error;
+  if (status && message) {
+    response.status(status).send({ message });
   } else {
     next(error);
   }
@@ -59,7 +63,7 @@ app.use((error, request, response, next) => {
 
 // internal server error handling (500)
 app.use((error, request, response, next) => {
-  console.log(error)
+  console.log(error);
 
   response.status(500).send({
     message:

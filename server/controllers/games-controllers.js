@@ -15,10 +15,7 @@ exports.getCategories = (request, response, next) => {
     .then((categories) => {
       response.status(200).send({ categories });
     })
-    .catch((error) => {
-      response.status(404).send(error);
-      next(error);
-    });
+    .catch(next);
 };
 
 exports.getReviewByID = (request, response, next) => {
@@ -27,23 +24,19 @@ exports.getReviewByID = (request, response, next) => {
     .then((review) => {
       response.status(200).send({ review });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
-exports.getReviews = async (request, response, next) => {
+exports.getReviews = (request, response, next) => {
   const { sort_by, order, category } = request.query;
-  await fetchCategories(category).catch((error) => {
-    next(error);
-  });
-  fetchReviews(sort_by, order, category)
+  fetchCategories(category)
+    .then(() => {
+      return fetchReviews(sort_by, order, category);
+    })
     .then((reviews) => {
       response.status(200).send({ reviews });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
 exports.patchReviewByID = (request, response, next) => {
@@ -53,23 +46,19 @@ exports.patchReviewByID = (request, response, next) => {
     .then((review) => {
       response.status(200).send({ review });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
-exports.getCommentsByReviewID = async (request, response, next) => {
+exports.getCommentsByReviewID = (request, response, next) => {
   const { review_id } = request.params;
-  await fetchReviewByID(review_id).catch((error) => {
-    next(error);
-  });
-  fetchCommentsByReviewID(review_id)
+  fetchReviewByID(review_id)
+    .then(() => {
+      return fetchCommentsByReviewID(review_id);
+    })
     .then((comments) => {
       response.status(200).send({ comments });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
 exports.getUsers = (request, response, next) => {
@@ -81,23 +70,21 @@ exports.getUsers = (request, response, next) => {
 exports.postCommentByReviewID = (request, response, next) => {
   const { review_id } = request.params;
   const { body, username } = request.body;
-  fetchReviewByID(review_id).catch((error) => {
-    next(error);
-  });
-  insertCommentByReviewID(review_id, body, username)
+  fetchReviewByID(review_id)
+    .then(() => {
+      return insertCommentByReviewID(review_id, body, username);
+    })
     .then((comment) => {
       response.status(201).send({ comment });
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
 exports.getAPI = (request, response, next) => {
-  fetchAPI().then(fileContent => {
-    response.status(200).send({fileContent})
-  })
-}
+  fetchAPI().then((fileContent) => {
+    response.status(200).send({ fileContent });
+  });
+};
 
 exports.deleteComment = (request, response, next) => {
   const { comment_id } = request.params;
@@ -105,8 +92,5 @@ exports.deleteComment = (request, response, next) => {
     .then(() => {
       response.sendStatus(204);
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
-
