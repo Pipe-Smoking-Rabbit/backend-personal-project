@@ -10,7 +10,7 @@ const {
   postCommentByReviewID,
   getAPI,
   deleteComment,
-} = require("./controllers/games-controllers");
+} = require("./controllers/");
 const {
   handleInternalServerError,
   handleCustomError,

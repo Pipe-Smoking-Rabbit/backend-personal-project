@@ -1,0 +1,9 @@
+exports.getCategories = require("./get-categories");
+exports.getReviewByID = require("./get-review-by-id");
+exports.getReviews = require("./get-reviews");
+exports.patchReviewByID = require("./patch-review-by-id");
+exports.getCommentsByReviewID = require("./get-comments-by-review-id");
+exports.getUsers = require("./get-users");
+exports.postCommentByReviewID = require("./post-comment-by-review-id");
+exports.getAPI = require("./get-api");
+exports.deleteComment = require("./delete-comment");
