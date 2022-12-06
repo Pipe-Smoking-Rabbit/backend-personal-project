@@ -7,3 +7,4 @@ exports.fetchUsers = require("./fetch-users");
 exports.insertCommentByReviewID = require("./insert-comment-by-review-id");
 exports.fetchAPI = require("./fetch-api");
 exports.removeComment = require("./remove-comment");
+exports.insertUser = require("./insert-user")

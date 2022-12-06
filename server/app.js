@@ -10,6 +10,7 @@ const {
   postCommentByReviewID,
   getAPI,
   deleteComment,
+  postUser,
 } = require("./controllers/");
 const {
   handleInternalServerError,
@@ -26,6 +27,7 @@ app.use(express.json());
 app.get("/api", getAPI);
 
 app.get("/api/users", getUsers);
+app.post("/api/users", postUser)
 
 app.get("/api/reviews", getReviews);
 

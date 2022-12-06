@@ -50,6 +50,27 @@ describe("Server Endpoints", () => {
           });
       });
     });
+    describe("POST", () => {
+      test.only('status:201 - inserts a new user to the database and responds with that user on a key of "user"', () => {
+        return request(app)
+          .post("/api/users")
+          .send({
+            username: "Pipe-Smoking-Rabbit",
+            avatar_url:
+              "https://static.tumblr.com/c4eb631d38d084b509d6e7db7452a008/ilzv8tb/H6Cnlqvqh/tumblr_static_8v62czb9h0soocogg8ckwg4s.jpg",
+            name: "average supertest enjoyer",
+          })
+          .expect(201)
+          .then(({ body: { user } }) => {
+            expect(user).toEqual({
+              username: "Pipe-Smoking-Rabbit",
+              avatar_url:
+                "https://static.tumblr.com/c4eb631d38d084b509d6e7db7452a008/ilzv8tb/H6Cnlqvqh/tumblr_static_8v62czb9h0soocogg8ckwg4s.jpg",
+              name: "average supertest enjoyer",
+            });
+          });
+      });
+    });
   });
   describe("/api/categories", () => {
     describe("GET", () => {

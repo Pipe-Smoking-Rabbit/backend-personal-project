@@ -7,3 +7,4 @@ exports.getUsers = require("./get-users");
 exports.postCommentByReviewID = require("./post-comment-by-review-id");
 exports.getAPI = require("./get-api");
 exports.deleteComment = require("./delete-comment");
+exports.postUser = require("./post-user")
