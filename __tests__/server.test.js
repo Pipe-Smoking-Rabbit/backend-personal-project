@@ -70,7 +70,7 @@ describe("Server Endpoints", () => {
             });
           });
       });
-      test.only("status:409 - when attempting to post a user when that user shares a pre-existing username with another user already in the database, responds with an error", () => {
+      test("status:409 - when attempting to post a user when that user shares a pre-existing username with another user already in the database, responds with an error", () => {
         return request(app)
           .post("/api/users")
           .send({
@@ -83,6 +83,17 @@ describe("Server Endpoints", () => {
           .then(({ body: { message } }) => {
             expect(message).toBe("Key (username)=(bainesface) already exists.");
           });
+      });
+      test('status:400 - responds with an error if user post body is missing one or more keys', () => {
+        return request(app)
+        .post("/api/users")
+        .send({
+          username: "Pipe-Smoking-Rabbit",
+        })
+        .expect(400)
+        .then(({body: {message}})=>{
+          expect(message).toBe("Invalid request.")
+        })
       });
     });
   });
