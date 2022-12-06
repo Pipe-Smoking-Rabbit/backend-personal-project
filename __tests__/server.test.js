@@ -51,7 +51,7 @@ describe("Server Endpoints", () => {
       });
     });
     describe("POST", () => {
-      test.only('status:201 - inserts a new user to the database and responds with that user on a key of "user"', () => {
+      test('status:201 - inserts a new user to the database and responds with that user on a key of "user"', () => {
         return request(app)
           .post("/api/users")
           .send({
@@ -68,6 +68,20 @@ describe("Server Endpoints", () => {
                 "https://static.tumblr.com/c4eb631d38d084b509d6e7db7452a008/ilzv8tb/H6Cnlqvqh/tumblr_static_8v62czb9h0soocogg8ckwg4s.jpg",
               name: "average supertest enjoyer",
             });
+          });
+      });
+      test.only("status:409 - when attempting to post a user when that user shares a pre-existing username with another user already in the database, responds with an error", () => {
+        return request(app)
+          .post("/api/users")
+          .send({
+            username: "bainesface",
+            name: "sarah",
+            avatar_url:
+              "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+          })
+          .expect(409)
+          .then(({ body: { message } }) => {
+            expect(message).toBe("Key (username)=(bainesface) already exists.");
           });
       });
     });
