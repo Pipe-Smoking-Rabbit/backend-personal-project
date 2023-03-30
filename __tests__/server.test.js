@@ -380,13 +380,13 @@ describe("Server Endpoints", () => {
             });
           });
       });
-      test("status:400 - unrecognised username provided for author of comment post request", () => {
+      test("status:404 - unable to find username provided for author of comment post request", () => {
         return request(app)
           .post("/api/reviews/3/comments")
           .send({ username: "monkee", body: "test" })
-          .expect(400)
+          .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("Credentials not recognised.");
+            expect(message).toBe("The comments_author_fkey was not found in the database.");
           });
       });
       test("status:400 - post request is made without a username or body property", () => {
@@ -413,7 +413,7 @@ describe("Server Endpoints", () => {
           .send({ username: "mallionaire", body: "test" })
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("Sorry. Review ID 420 does not exist.");
+            expect(message).toBe("The comments_review_id_fkey was not found in the database.");
           });
       });
       test("status:400 - review ID is of invalid data type", () => {
