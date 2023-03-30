@@ -1,14 +1,14 @@
 {
   "name": "be-nc-games",
   "version": "1.0.0",
-  "description": "bc-nc-games",
-  "main": "index.js",
+  "description": "nc-game reviews API",
+  "main": "./server/listen.js",
   "scripts": {
     "setup-dbs": "psql -f ./db/setup.sql",
     "seed": "node ./db/seeds/run-seed.js",
     "test": "jest --verbose",
     "prepare": "husky install",
-    "seed:prod": "NODE_ENV=production DATABASE_URL=$(heroku config:get DATABASE_URL) npm run seed",
+    "seed:prod": "NODE_ENV=production npm run seed",
     "start": "node ./server/listen.js"
   },
   "repository": {
@@ -26,17 +26,15 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.18.1",
-    "fs": "^0.0.1-security",
-    "fs.promises": "^0.1.2",
     "husky": "^7.0.0",
-    "jest": "^27.5.1",
-    "jest-extended": "^2.0.0",
     "pg": "^8.7.3",
-    "pg-format": "^1.0.4",
-    "supertest": "^6.2.4"
+    "pg-format": "^1.0.4"
   },
   "devDependencies": {
-    "jest-sorted": "^1.0.14"
+    "jest": "^27.5.1",
+    "jest-extended": "^2.0.0",
+    "jest-sorted": "^1.0.14",
+    "supertest": "^6.2.4"
   },
   "jest": {
     "setupFilesAfterEnv": [
