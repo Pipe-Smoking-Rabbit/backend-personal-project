@@ -92,7 +92,7 @@ describe("Server Endpoints", () => {
                   votes: expect.any(Number),
                   review_body: expect.any(String),
                   designer: expect.any(String),
-                  comment_count: expect.any(String),
+                  comment_count: expect.any(Number),
                 })
               );
             });

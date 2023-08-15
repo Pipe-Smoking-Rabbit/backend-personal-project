@@ -6,7 +6,7 @@ module.exports = function fetchReviews(
   category
 ) {
   let queryString = `
-      SELECT reviews.*, COUNT(comments.review_id)
+      SELECT reviews.*, COUNT(comments.review_id)::INT
       AS comment_count
       FROM reviews
       LEFT JOIN comments
