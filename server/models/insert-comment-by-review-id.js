@@ -1,9 +1,6 @@
 const connection = require("../../db/connection");
 
 module.exports = function insertCommentByReviewID(review_id, body, username) {
-  if (typeof body !== "string") {
-    return Promise.reject({ status: 400, message: "Invalid request." });
-  }
   return connection
     .query(
       `

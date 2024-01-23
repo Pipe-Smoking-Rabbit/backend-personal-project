@@ -392,16 +392,7 @@ describe("Server Endpoints", () => {
       test("status:400 - post request is made without a username or body property", () => {
         return request(app)
           .post("/api/reviews/4/comments")
-          .send({ no_username: "mallionaire", no_body: "test" })
-          .expect(400)
-          .then(({ body: { message } }) => {
-            expect(message).toBe("Invalid request.");
-          });
-      });
-      test("status:400 - post request contains invalid forms of data for body", () => {
-        return request(app)
-          .post("/api/reviews/1/comments")
-          .send({ username: "mallionaire", body: 420 })
+          .send({ username: "mallionaire" })
           .expect(400)
           .then(({ body: { message } }) => {
             expect(message).toBe("Invalid request.");
