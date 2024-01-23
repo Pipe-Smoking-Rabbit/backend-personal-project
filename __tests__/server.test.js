@@ -2,6 +2,7 @@ const request = require("supertest");
 const app = require("../server/app");
 const connection = require("../db/connection");
 const testData = require("../db/data/test-data/index");
+const endPointJSON = require("../endpoints.json");
 const seed = require("../db/seeds/seed");
 
 beforeEach(() => seed(testData));
@@ -15,18 +16,7 @@ describe("Server Endpoints", () => {
           .get("/api")
           .expect(200)
           .then(({ body: { endPoints } }) => {
-            expect(endPoints).toEqual(
-              expect.objectContaining({
-                "DELETE /api/comments/:comment_id": expect.any(Object),
-                "GET /api/reviews": expect.any(Object),
-                "GET /api/reviews/:review_id": expect.any(Object),
-                "GET /api/reviews/:review_id/comments": expect.any(Object),
-                "GET /api/users": expect.any(Object),
-                "PATCH /api/reviews/:review_id": expect.any(Object),
-                "POST /api/reviews/:review_id/comments": expect.any(Object),
-                "DELETE /api/comments/:comment_id": expect.any(Object),
-              })
-            );
+            expect(endPoints).toEqual(endPointJSON);
           });
       });
     });
@@ -46,6 +36,33 @@ describe("Server Endpoints", () => {
                 avatar_url: expect.any(String),
               });
             });
+          });
+      });
+    });
+  });
+  describe("/api/users/:username", () => {
+    describe("GET", () => {
+      test("status:200", () => {
+        return request(app).get("/api/users/philippaclaire9").expect(200);
+      });
+      test("status:200 - responds with the requested user object including username, name, and avatar_url properties", () => {
+        return request(app)
+          .get("/api/users/bainesface")
+          .then(({ body: { user } }) => {
+            expect(user).toMatchObject({
+              username: "bainesface",
+              name: "sarah",
+              avatar_url:
+                "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+            });
+          });
+      });
+      test("status:404 - responds with a not found error if requested username is not in the database", () => {
+        return request(app)
+          .get("/api/users/mr-nobody")
+          .expect(404)
+          .then(({ body: { message } }) => {
+            expect(message).toBe(`No user found with username "mr-nobody"`);
           });
       });
     });
@@ -385,7 +402,9 @@ describe("Server Endpoints", () => {
           .send({ username: "monkee", body: "test" })
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("The comments_author_fkey was not found in the database.");
+            expect(message).toBe(
+              "The comments_author_fkey was not found in the database."
+            );
           });
       });
       test("status:400 - post request is made without a username or body property", () => {
@@ -403,7 +422,9 @@ describe("Server Endpoints", () => {
           .send({ username: "mallionaire", body: "test" })
           .expect(404)
           .then(({ body: { message } }) => {
-            expect(message).toBe("The comments_review_id_fkey was not found in the database.");
+            expect(message).toBe(
+              "The comments_review_id_fkey was not found in the database."
+            );
           });
       });
       test("status:400 - review ID is of invalid data type", () => {

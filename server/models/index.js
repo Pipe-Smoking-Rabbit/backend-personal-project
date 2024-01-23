@@ -6,3 +6,4 @@ exports.updateReviewByID = require("./update-review-by-id");
 exports.fetchUsers = require("./fetch-users");
 exports.insertCommentByReviewID = require("./insert-comment-by-review-id");
 exports.removeComment = require("./remove-comment");
+exports.fetchUserByUsername = require("./fetch-user-by-username");
