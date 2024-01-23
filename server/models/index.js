@@ -5,5 +5,4 @@ exports.fetchCommentsByReviewID = require("./fetch-comments-by-review-id");
 exports.updateReviewByID = require("./update-review-by-id");
 exports.fetchUsers = require("./fetch-users");
 exports.insertCommentByReviewID = require("./insert-comment-by-review-id");
-exports.fetchAPI = require("./fetch-api");
 exports.removeComment = require("./remove-comment");

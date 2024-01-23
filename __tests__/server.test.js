@@ -14,9 +14,8 @@ describe("Server Endpoints", () => {
         return request(app)
           .get("/api")
           .expect(200)
-          .then(({ body: { fileContent } }) => {
-            fileContent = JSON.parse(fileContent);
-            expect(fileContent).toEqual(
+          .then(({ body: { endPoints } }) => {
+            expect(endPoints).toEqual(
               expect.objectContaining({
                 "DELETE /api/comments/:comment_id": expect.any(Object),
                 "GET /api/reviews": expect.any(Object),

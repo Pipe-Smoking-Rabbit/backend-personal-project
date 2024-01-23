@@ -1,7 +1,5 @@
-const { fetchAPI } = require("../models");
+const endPoints = require("../../endpoints.json");
 
 module.exports = function getAPI(request, response, next) {
-  fetchAPI().then((fileContent) => {
-    response.status(200).send({ fileContent });
-  });
+  response.status(200).send({ endPoints });
 };
