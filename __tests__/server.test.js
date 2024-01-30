@@ -81,6 +81,7 @@ describe("Server Endpoints", () => {
                 expect.objectContaining({
                   slug: expect.any(String),
                   description: expect.any(String),
+                  category_img_url: expect.any(String),
                 })
               );
             });
